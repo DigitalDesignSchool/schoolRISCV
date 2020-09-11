@@ -4,13 +4,11 @@
 #
 
 # default target to run when make is called without args
-default: build
-
 help:
-	$(info make help     - show this message)
+	$(info make help     - show this message (default))
 	$(info make clean    - delete folder with simulation data)
 	$(info make rars     - run RISC-V CPU simulator)
-	$(info make build    - create .hex program image (default))
+	$(info make build    - create .hex program image)
 	$(info make board    - copy .hex to boards/program)
 	$(info make modelsim - run simulation using modelsim)
 	$(info make icarus   - run simulation using icarus verilog)
@@ -27,10 +25,11 @@ clean:
 	rm -f *.elf *.dis *.mem *.hex
 
 # make rars
-#  java -jar ../common/rars1_4.jar - run rars1_4.jar application using java machine
+#  java -jar ../common/rars1_4.jar & - run rars1_4.jar application using java machine
+#									   in background
 RARS = java -jar ../common/rars1_4.jar
 rars:
-	$(RARS)
+	$(RARS) &
 
 #########################################################
 # software build
@@ -46,7 +45,7 @@ program.hex: main.S
 	$(RARS) nc a dump .text HexText program.hex main.S
 
 # make board - copy to board
-#  copies program.hext to board/program where is will be searched with sinthesys tools
+#  copies program.hext to board/program where is will be searched with synthesis tools
 board: program.hex
 	cp ./program.hex ../../board/program
 
